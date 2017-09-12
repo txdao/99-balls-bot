@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # imports
 import neat
-import webbrowser
+import subprocess
 #import screen grab
 #import mouse control
 
@@ -11,8 +11,8 @@ def launch_game_browser(url):
     launches an instance of the game
     will also move the game window into an appropriate place.
     '''
-    new = 1
-    webbrowser.open(url, new, False)
+    command = "cmd /c start chrome " + url + " --new-window"
+    subprocess.Popen(command,shell=True)
 
 
 def get_screen_img():
