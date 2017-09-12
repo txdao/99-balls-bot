@@ -6,8 +6,14 @@ import webbrowser
 #import mouse control
 
 
-def launch_game_browser():
-    pass
+def launch_game_browser(url):
+    '''
+    launches an instance of the game
+    will also move the game window into an appropriate place.
+    '''
+    new = 1
+    webbrowser.open(url, new, False)
+
 
 def get_screen_img():
     return None
@@ -21,7 +27,8 @@ def init_game_area():
     determine where the game area is
     '''
     # launch browser to https://www.crazygames.com/assets/99-balls/index.html
-    launch_game_browser()
+    url = 'https://www.crazygames.com/assets/99-balls/index.html'
+    launch_game_browser(url)
     screen_img = get_screen_img()
     game_coords = get_game_coords(screen_img)
 
