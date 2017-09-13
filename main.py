@@ -87,11 +87,16 @@ def init_game_area():
     game_coords = get_game_coords(im)
     return game_coords
 
+def neural_net():
+
+    return None
+
 def run():
     # initialize game area
     game_area = init_game_area()
 
     # train neural net
+    winner = neural_net()
 
     # save winning data etc (on interupt?).
     pass
