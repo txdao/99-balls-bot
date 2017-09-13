@@ -10,6 +10,7 @@ import time
 #import mouse control
 
 MIN_MATCH_COUNT = 10
+game_area
 
 def launch_game_browser(url):
     '''
@@ -70,7 +71,6 @@ def get_game_coords(img):
 
     else:
         print("Not enough matches are found - %d/%d" % (len(good),MIN_MATCH_COUNT))
-        matchesMask = None
         return None
 
 
@@ -85,14 +85,11 @@ def init_game_area():
     time.sleep(5)
     im = get_screen_data()
     game_coords = get_game_coords(im)
-
-
-
-    pass
+    return game_coords
 
 def run():
     # initialize game area
-    init_game_area()
+    game_area = init_game_area()
 
     # train neural net
 
