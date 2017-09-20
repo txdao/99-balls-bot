@@ -5,8 +5,9 @@ import numpy as np
 import subprocess
 import cv2
 import pyscreenshot as ImageGrab
-from matplotlib import pyplot as plt
+#from matplotlib import pyplot as plt
 import time
+import os
 #import mouse control
 
 MIN_MATCH_COUNT = 10
@@ -60,7 +61,7 @@ def get_game_coords(img):
         dst_pts = np.float32([ kp2[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
 
         M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC,5.0)
-        matchesMask = mask.ravel().tolist()
+#        matchesMask = mask.ravel().tolist()
 
         h,w,d = img1.shape
         pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
@@ -86,6 +87,10 @@ def init_game_area():
     return game_coords
 
 def get_fitness_score():
+    """
+    given some information from the previous play,
+    compute a score for the gene.
+    """
     return None
 
 def eval_genomes(genomes, config):
@@ -98,7 +103,14 @@ def eval_genomes(genomes, config):
 #        genome.fitness() = get_fitness_score()
 
 def train_neural_net():
+    """
+    Prepares configuration file,
+    runs simulation until fitness threshold or max iterations is reached
+    """
+    return None
     # Load configuration.
+    local_dir = os.path.dirname(__file__)
+    config_file = os.path.join(local_dir, 'config-feedforward')
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_file)
