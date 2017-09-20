@@ -10,7 +10,7 @@ import time
 #import mouse control
 
 MIN_MATCH_COUNT = 10
-game_area
+game_area = []
 
 def launch_game_browser(url):
     '''
@@ -86,12 +86,13 @@ def init_game_area():
     game_coords = get_game_coords(im)
     return game_coords
 
-def eval_genomes(genome, config):
-    net = neat.nn.FeedForwardNetwork.create(genome, config)
-    state = get_game_state()
-    action = net.activate(state)
-    perform_action(action)
-    get_fitness_score()
+def eval_genomes(genomes, config):
+    for genome_id, genome in genomes:
+        net = neat.nn.FeedForwardNetwork.create(genome, config)
+        state = get_game_state()
+        action = net.activate(state)
+        perform_action(action)
+        genome.fitness() = get_fitness_score()
 
 def train_neural_net():
     # Load configuration.
