@@ -82,17 +82,20 @@ def init_game_area():
     game_url = 'https://www.crazygames.com/assets/99-balls/index.html'
     launch_game_browser(game_url)
     time.sleep(5)
-    im = get_screen_data()
-    game_coords = get_game_coords(im)
+    game_coords = get_game_coords(get_screen_data())
     return game_coords
 
+def get_fitness_score():
+    return None
+
 def eval_genomes(genomes, config):
-    for genome_id, genome in genomes:
-        net = neat.nn.FeedForwardNetwork.create(genome, config)
-        state = get_game_state()
-        action = net.activate(state)
-        perform_action(action)
-        genome.fitness() = get_fitness_score()
+    pass
+#    for genome_id, genome in genomes:
+#        net = neat.nn.FeedForwardNetwork.create(genome, config)
+#        state = get_game_state()
+#        action = net.activate(state)
+#        perform_action(action)
+#        genome.fitness() = get_fitness_score()
 
 def train_neural_net():
     # Load configuration.
@@ -116,7 +119,9 @@ def train_neural_net():
 
 def run():
     # initialize game area
-    game_coords = init_game_area()
+    game_coords = get_game_coords(get_screen_data())
+    if game_coords is None:
+        game_coords = init_game_area()
 
     # train neural net
     winner = train_neural_net()
