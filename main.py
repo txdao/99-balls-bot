@@ -10,7 +10,7 @@ import time
 #import mouse control
 
 MIN_MATCH_COUNT = 10
-game_area
+game_area = []
 
 def launch_game_browser(url):
     '''
@@ -73,7 +73,6 @@ def get_game_coords(img):
         print("Not enough matches are found - %d/%d" % (len(good),MIN_MATCH_COUNT))
         return None
 
-
 def init_game_area():
     '''
     create new instance of game
@@ -87,11 +86,40 @@ def init_game_area():
     game_coords = get_game_coords(im)
     return game_coords
 
+def eval_genomes(genomes, config):
+    for genome_id, genome in genomes:
+        net = neat.nn.FeedForwardNetwork.create(genome, config)
+        state = get_game_state()
+        action = net.activate(state)
+        perform_action(action)
+        genome.fitness() = get_fitness_score()
+
+def train_neural_net():
+    # Load configuration.
+    config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
+                         neat.DefaultSpeciesSet, neat.DefaultStagnation,
+                         config_file)
+
+    # Create the population, which is the top-level object for a NEAT run.
+    p = neat.Population(config)
+
+    # Add a stdout reporter to show progress in the terminal.
+    p.add_reporter(neat.StdOutReporter(True))
+    stats = neat.StatisticsReporter()
+    p.add_reporter(stats)
+    p.add_reporter(neat.Checkpointer(5))
+
+    # Run for up to 300 generations.
+    winner = p.run(eval_genomes, 3000)
+
+    return None
+
 def run():
     # initialize game area
-    game_area = init_game_area()
+    game_coords = init_game_area()
 
     # train neural net
+    winner = train_neural_net()
 
     # save winning data etc (on interupt?).
     pass
