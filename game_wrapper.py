@@ -10,7 +10,9 @@ import cv2
 import numpy as np
 import subprocess
 import time
-import pyautogui
+import pyautogui #click does not work with this
+import win32api, win32con
+import mouse
 
 class Game():
     BALL_DIAM_PCT = 0.
@@ -113,12 +115,8 @@ class Game():
         """
         x = int(self.game_width*self.START_BUTTON_PCT[0] + self.game_coords[0][0])
         y = int(self.game_height*self.START_BUTTON_PCT[1] + self.game_coords[0][1])
-        print(x)
-        print(y)
-        pyautogui.moveTo(x, y)
-        pyautogui.click(x=x+1, y=y+1)
-
-
+        pyautogui.moveTo(x=x, y=y)
+        mouse.left_click()
 
     def get_screen_data(self):
         im = ImageGrab.grab()
