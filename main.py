@@ -52,6 +52,7 @@ def train_neural_net(games):
 def run():
     # initialize game area
     game = game_wrapper.Game(use_existing_game=True)
+    game.start_game()
 
     # train neural net
     winner = train_neural_net(game)

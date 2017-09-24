@@ -10,6 +10,7 @@ import cv2
 import numpy as np
 import subprocess
 import time
+import pyautogui
 
 class Game():
     BALL_DIAM_PCT = 0.
@@ -20,6 +21,7 @@ class Game():
     LEVEL_NUMBER_X_PCT = 0
     LEVEL_NUMBER_Y_PCT = 0
     STD_BLACK = [0, 0, 0]
+    START_BUTTON_PCT = [.50,.60]
 
     def __init__(self, use_existing_game = False):
         """
@@ -41,6 +43,8 @@ class Game():
             self.launch_game_browser(game_url)
             time.sleep(2)
         self.game_coords = self.get_game_coords(self.get_screen_data())
+        self.game_width = self.game_coords[1][0] - self.game_coords[0][0]
+        self.game_height = self.game_coords[1][1] - self.game_coords[0][1]
         self.state = []
         self.circle_location = []
         self.level_number = []
@@ -96,7 +100,7 @@ class Game():
             pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
             dst = cv2.perspectiveTransform(pts,M)
 
-            coords = [np.int32(dst[0]), np.int32(dst[2])]
+            coords = (np.int16(dst[0][0]), np.int16(dst[2][0]))
             return coords
 
         else:
@@ -105,14 +109,16 @@ class Game():
 
     def start_game(self):
         """
-        create new instance of game
-        determine where the game area is
+        Presses start
         """
-        # launch browser
-        game_url = 'https://www.crazygames.com/assets/99-balls/index.html'
-        self.launch_game_browser(game_url)
-        time.sleep(5)
-        self.game_coords= self.get_game_coords(self.get_screen_data())
+        x = int(self.game_width*self.START_BUTTON_PCT[0] + self.game_coords[0][0])
+        y = int(self.game_height*self.START_BUTTON_PCT[1] + self.game_coords[0][1])
+        print(x)
+        print(y)
+        pyautogui.moveTo(x, y)
+        pyautogui.click(x=x+1, y=y+1)
+
+
 
     def get_screen_data(self):
         im = ImageGrab.grab()
