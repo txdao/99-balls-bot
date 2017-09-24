@@ -13,6 +13,7 @@ import time
 import pyautogui #click does not work with this
 import win32api, win32con
 import mouse
+import math
 
 class Game():
     BALL_DIAM_PCT = 0.
@@ -23,7 +24,12 @@ class Game():
     LEVEL_NUMBER_X_PCT = 0
     LEVEL_NUMBER_Y_PCT = 0
     STD_BLACK = [0, 0, 0]
-    START_BUTTON_PCT = [.50,.60]
+    START_BUTTON_PCT = [0.50,0.60]
+    RESET_BUTTON_PCT = [0.28, 0.5]
+    PAUSE_BUTTON_PCT = [0.94, 0.035]
+    HOME_BUTTON_PCT = [0.71, 0.50]
+    RESUME_BUTTON_PCT = [0.50, 0.50]
+
 
     def __init__(self, use_existing_game = False):
         """
@@ -111,27 +117,37 @@ class Game():
 
     def start_game(self):
         """
-        Presses start
+        Presses start button on home screen
         """
-        x = int(self.game_width*self.START_BUTTON_PCT[0] + self.game_coords[0][0])
-        y = int(self.game_height*self.START_BUTTON_PCT[1] + self.game_coords[0][1])
-        pyautogui.moveTo(x=x, y=y)
-        mouse.left_click()
+        mouse.left_click(self, self.START_BUTTON_PCT)
+
+    def reset_game(self):
+        mouse.left_click(self, self.PAUSE_BUTTON_PCT)
+        mouse.left_click(self, self.RESET_BUTTON_PCT)
+
+    def return_home(self):
+        mouse.left_click(self, self.PAUSE_BUTTON_PCT)
+        mouse.left_click(self, self.HOME_BUTTON_PCT)
+
+    def release_circle(self, angle):
+        d = self.game_width*.45
+        dx = d*math.sin(math.radians(angle))
+        dy = d*math.cos(math.radians(angle))
+        origin_pct = [0.5, 0.885]
+        x_orig = int(self.game_width*origin_pct[0] + self.game_coords[0][0])
+        y_orig = int(self.game_height*origin_pct[1] + self.game_coords[0][1])
+        pyautogui.moveTo(x=x_orig+dx, y=y_orig-dy)
+        mouse.left_down()
+        pyautogui.moveTo(x=x_orig, y=y_orig)
+        mouse.left_up()
 
     def get_screen_data(self):
         im = ImageGrab.grab()
         im.save('screen_grab.png')
         return cv2.imread('screen_grab.png')
 
-
-    def reset_game():
-        pass
-
     def get_game_state():
         return None
-
-    def release_circle(angle):
-        pass
 
     def update_game_state():
         pass

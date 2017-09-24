@@ -4,6 +4,7 @@ import neat
 import game_wrapper
 #from matplotlib import pyplot as plt
 import os
+import time
 #import mouse control
 
 def get_fitness_score():
@@ -53,12 +54,14 @@ def run():
     # initialize game area
     game = game_wrapper.Game(use_existing_game=True)
     game.start_game()
+    time.sleep(2)
+    game.release_circle(-10)
 
     # train neural net
     winner = train_neural_net(game)
 
     # save winning data etc (on interupt?).
-    pass
+    return game
 
 if __name__ == '__main__':
     run()
