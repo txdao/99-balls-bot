@@ -157,14 +157,16 @@ class Game():
         """
         Examines the screen at the ball location and returns the value of the ball
         Value of ball is binary (for now)
+        Assume that the image was captured already
         """
-        x1 = self.game_coords[0][0] + self.game_width*j/7
-        y1 = self.game_coords[0][1] + self.game_height*i*(.745-.15)/7 + self.game_height*.15
-        upper_left_corner = [x1, y1]
-        dx = self.game_width/7
-        dy = self.game_height*(.745-.15)/7
-        lower_right_corner = [x1 + dx, y1 + dy]
-
+        x1 = int(self.game_coords[0][0] + self.game_width*j/7)
+        y1 = int(self.game_coords[0][1] + self.game_height*i*(.745-.15)/7 + self.game_height*.15)
+        dx = int(self.game_width/7)
+        dy = int(self.game_height*(.745-.15)/7)
+        x2, y2 = x1 + dx, y1 + dy
+        crop_img = cv2.cvtColor(self.current_screen_img[y1:y2, x1:x2], cv2.COLOR_BGR2GRAY)
+        _, thrsh = cv2.threshold(crop_img, 100, 255, cv2.THRESH_BINARY)
+        return int(np.mean(thrsh) > 0)
 
     def update_game_state(self):
         """

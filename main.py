@@ -3,6 +3,7 @@
 import neat
 import game_wrapper
 #from matplotlib import pyplot as plt
+import cv2
 import os
 import time
 #import mouse control
@@ -54,8 +55,10 @@ def run():
     # initialize game area
     game = game_wrapper.Game(use_existing_game=True)
     game.start_game()
-    time.sleep(.5)
-    game.release_circle(0)
+    time.sleep(1)
+    game.current_screen_img = game.get_screen_data()
+    cv2.imwrite("screen.png", game.current_screen_img)
+    print(game.get_ball_value(0,3))
 
     # train neural net
     winner = train_neural_net(game)
