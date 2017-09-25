@@ -138,7 +138,6 @@ class Game():
     def game_over_click_home(self):
         mouse.left_click(self, self.GAME_OVER_PLAY_PCT)
 
-
     def release_circle(self, angle):
         d = self.game_width*.45
         dx = d*math.sin(math.radians(angle))
@@ -155,9 +154,6 @@ class Game():
         im = ImageGrab.grab()
         im.save('screen_grab.png')
         return cv2.imread('screen_grab.png')
-
-    def get_game_state():
-        return None
 
     def get_ball_value(self, i, j):
         """

@@ -18,12 +18,12 @@ def get_fitness_score():
 
 def eval_genomes(genomes, config):
     pass
-#    for genome_id, genome in genomes:
-#        net = neat.nn.FeedForwardNetwork.create(genome, config)
-#        state = get_game_state()
-#        action = net.activate(state)
-#        perform_action(action)
-#        genome.fitness() = get_fitness_score()
+    for genome_id, genome in genomes:
+        net = neat.nn.FeedForwardNetwork.create(genome, config)
+        state = get_game_state()
+        action = net.activate(state)
+        perform_action(action)
+        genome.fitness() = get_fitness_score()
 
 def train_neural_net(games):
     """
