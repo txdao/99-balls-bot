@@ -15,11 +15,10 @@ def get_fitness_score(state, new_state):
     return None
 
 def eval_genomes(genomes, config):
-
     for genome_id, genome in genomes:
         net = neat.nn.FeedForwardNetwork.create(genome, config)
-        state = game.update_game_state().reshape(-1, 1)
-        circle_location = game.update_circle_location
+        state, circle_location = game.update_game_state()
+
         action = net.activate([state, circle_location])
         game.release_circle(action)
         new_state = game.update_game_state()
@@ -54,8 +53,6 @@ def train_neural_net(games):
 def run():
     game.start_game()
     time.sleep(1)
-    game.update_game_state()
-    game.state
 
     # train neural net
     winner = train_neural_net(game)
