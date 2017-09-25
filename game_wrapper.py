@@ -18,7 +18,7 @@ class Game():
     BALL_DIAM_PCT = 0.
     N_BALL_X = 7
     N_BALL_Y = 8
-    CIRCLE_Y_PCT = 0.
+    CIRCLE_Y_PCT = 0.884
     CIRCLE_DIAM_PCT = 0.
     LEVEL_NUMBER_X_PCT = 0
     LEVEL_NUMBER_Y_PCT = 0
@@ -151,8 +151,7 @@ class Game():
         mouse.left_up()
 
     def get_screen_data(self):
-        im = ImageGrab.grab()
-        im.save('screen_grab.png')
+        ImageGrab.grab_to_file('screen_grab.png', childprocess = False)
         return cv2.imread('screen_grab.png')
 
     def get_ball_value(self, i, j):
@@ -172,9 +171,20 @@ class Game():
         cv2.imwrite("thresh.png", thresh)
         return int(np.mean(thresh) > 0)
 
+    def get_circle_location(self):
+        # get circle location
+        x1 = int(self.game_coords[0][0])
+        x2 = int(self.game_coords[0][0] + self.game_width)
+        row = int(self.game_coords[0][1] + self.game_height*self.CIRCLE_Y_PCT)
+        crop_img = cv2.cvtColor(self.current_screen_img[row:row+3, x1:x2], cv2.COLOR_BGR2GRAY)
+        _, thresh = cv2.threshold(crop_img, 100, 255, cv2.THRESH_BINARY)
+        circle_locs = np.where(thresh[1]==255)[0]
+        self.circle_location = (np.mean(circle_locs)/self.game_width)
+        return self.circle_location
+
     def update_game_state(self):
         """
-        updates the values for each ball location.
+        updates the values for each ball location and circle location
         using the captured screen image, analyze each ball location for if median is > 0
         returns matrix of ball values.
         """
@@ -188,6 +198,13 @@ class Game():
             for i in range(8):
                 for j in range(7):
                     self.state[i][j] = self.get_ball_value(i, j)
+
+        self.get_circle_location()
+        return self.state, self.circle_location
+
+    def update_circle_location(self):
+
+        return self.circle_location
 
     def move_game_area(direction):
         pass

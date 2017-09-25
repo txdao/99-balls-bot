@@ -2,14 +2,12 @@
 # imports
 import neat
 import game_wrapper
-#from matplotlib import pyplot as plt
-import cv2
 import os
 import time
 
-#import mouse control
+game = game_wrapper.Game(use_existing_game=True)
 
-def get_fitness_score():
+def get_fitness_score(state, new_state):
     """
     given some information from the previous play,
     compute a score for the gene.
@@ -17,20 +15,21 @@ def get_fitness_score():
     return None
 
 def eval_genomes(genomes, config):
-    pass
+
     for genome_id, genome in genomes:
         net = neat.nn.FeedForwardNetwork.create(genome, config)
-        state = get_game_state()
-        action = net.activate(state)
-        perform_action(action)
-        genome.fitness() = get_fitness_score()
+        state = game.update_game_state().reshape(-1, 1)
+        circle_location = game.update_circle_location
+        action = net.activate([state, circle_location])
+        game.release_circle(action)
+        new_state = game.update_game_state()
+        genome.fitness = get_fitness_score(state, new_state)
 
 def train_neural_net(games):
     """
     Prepares configuration file,
     runs simulation until fitness threshold or max iterations is reached
     """
-    return None
     # Load configuration.
     local_dir = os.path.dirname(__file__)
     config_file = os.path.join(local_dir, 'config-feedforward')
@@ -53,8 +52,6 @@ def train_neural_net(games):
     return None
 
 def run():
-    # initialize game area
-    game = game_wrapper.Game(use_existing_game=True)
     game.start_game()
     time.sleep(1)
     game.update_game_state()
