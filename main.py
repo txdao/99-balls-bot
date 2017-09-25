@@ -6,6 +6,7 @@ import game_wrapper
 import cv2
 import os
 import time
+
 #import mouse control
 
 def get_fitness_score():
@@ -56,9 +57,8 @@ def run():
     game = game_wrapper.Game(use_existing_game=True)
     game.start_game()
     time.sleep(1)
-    game.current_screen_img = game.get_screen_data()
-    cv2.imwrite("screen.png", game.current_screen_img)
-    print(game.get_ball_value(0,3))
+    game.update_game_state()
+    game.state
 
     # train neural net
     winner = train_neural_net(game)

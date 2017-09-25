@@ -29,6 +29,7 @@ class Game():
     HOME_BUTTON_PCT = [0.71, 0.50]
     RESUME_BUTTON_PCT = [0.50, 0.50]
     MAX_RELEASE_ANGLE_DEG = 84.32
+    GAME_OVER_PLAY_PCT = [0.5, 0.8]
 
     def __init__(self, use_existing_game = False):
         """
@@ -56,7 +57,7 @@ class Game():
         self.game_coords = self.get_game_coords(self.current_screen_img)
         self.game_width = self.game_coords[1][0] - self.game_coords[0][0]
         self.game_height = self.game_coords[1][1] - self.game_coords[0][1]
-        self.state = []
+        self.state = np.zeros((8,7))
         self.circle_location = []
         self.level_number = []
         self.ball_locations = []
@@ -133,6 +134,10 @@ class Game():
         mouse.left_click(self, self.PAUSE_BUTTON_PCT)
         mouse.left_click(self, self.HOME_BUTTON_PCT)
 
+    def game_over_click_home(self):
+        mouse.left_click(self, self.GAME_OVER_PLAY_PCT)
+
+
     def release_circle(self, angle):
         d = self.game_width*.45
         dx = d*math.sin(math.radians(angle))
@@ -176,8 +181,7 @@ class Game():
         """
         for i in range(8):
             for j in range(7):
-                self.get_ball_value(i, j)
-        return None
+                self.state[i][j] = self.get_ball_value(i, j)
 
     def move_game_area(direction):
         pass
