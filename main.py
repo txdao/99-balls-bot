@@ -13,7 +13,11 @@ def get_fitness_score(state, new_state):
     given some information from the previous play,
     compute a score for the gene.
     """
-    return None
+    diff = state[:-1] - new_state[1:]
+    removed = np.sum(diff)
+    n_balls = np.sum(state)
+
+    return removed/n_balls
 
 def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
@@ -21,8 +25,10 @@ def eval_genomes(genomes, config):
         state, circle_location = game.update_game_state()
         state_ = state.reshape(-1, 1)
         action = net.activate(np.append(state_, circle_location))
+        #wait until next level
         game.release_circle(action[0])
-        new_state = game.update_game_state()
+        time.sleep(3)
+        new_state, _ = game.update_game_state()
         genome.fitness = get_fitness_score(state, new_state)
 
 def train_neural_net(games):

@@ -202,7 +202,7 @@ class Game():
                     self.state[i][j] = self.get_ball_value(i, j)
 
         self.get_circle_location()
-        return self.state, self.circle_location
+        return self.state.copy(), self.circle_location.copy()
 
     def update_circle_location(self):
 
