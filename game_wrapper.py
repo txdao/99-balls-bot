@@ -11,7 +11,6 @@ import numpy as np
 import subprocess
 import time
 import pyautogui #click does not work with this
-import win32api, win32con
 import mouse
 import math
 
