@@ -38,19 +38,23 @@ class Game():
         """
         # launch browser
         game_url = 'https://www.crazygames.com/assets/99-balls/index.html'
+
         if use_existing_game:
             print("checking for existing game")
             self.game_coords = self.get_game_coords(self.get_screen_data())
+
             if self.game_coords is None:
                 print("None found, launching new game")
                 self.game_coords = self.launch_game_browser(game_url)
                 time.sleep(2)
             else:
                 print("found existing game")
+
         else:
             self.launch_game_browser(game_url)
             time.sleep(2)
-        self.game_coords = self.get_game_coords(self.get_screen_data())
+        self.current_screen_img = self.get_screen_data()
+        self.game_coords = self.get_game_coords(self.current_screen_img)
         self.game_width = self.game_coords[1][0] - self.game_coords[0][0]
         self.game_height = self.game_coords[1][1] - self.game_coords[0][1]
         self.state = []
@@ -124,6 +128,7 @@ class Game():
     def reset_game(self):
         mouse.left_click(self, self.PAUSE_BUTTON_PCT)
         mouse.left_click(self, self.RESET_BUTTON_PCT)
+        time.sleep(.5)
 
     def return_home(self):
         mouse.left_click(self, self.PAUSE_BUTTON_PCT)
@@ -149,8 +154,29 @@ class Game():
     def get_game_state():
         return None
 
-    def update_game_state():
-        pass
+    def get_ball_value(self, i, j):
+        """
+        Examines the screen at the ball location and returns the value of the ball
+        Value of ball is binary (for now)
+        """
+        x1 = self.game_coords[0][0] + self.game_width*j/7
+        y1 = self.game_coords[0][1] + self.game_height*i*(.745-.15)/7 + self.game_height*.15
+        upper_left_corner = [x1, y1]
+        dx = self.game_width/7
+        dy = self.game_height*(.745-.15)/7
+        lower_right_corner = [x1 + dx, y1 + dy]
+
+
+    def update_game_state(self):
+        """
+        updates the values for each ball location.
+        using the captured screen image, analyze each ball location for if median is > 0
+        returns matrix of ball values.
+        """
+        for i in range(8):
+            for j in range(7):
+                self.get_ball_value(i, j)
+        return None
 
     def move_game_area(direction):
         pass
