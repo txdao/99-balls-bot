@@ -61,6 +61,7 @@ class Game():
         self.circle_location = []
         self.level_number = []
         self.ball_locations = []
+        self.is_first_level = True
 
     def launch_game_browser(self, url):
         """
@@ -170,8 +171,10 @@ class Game():
         dy = int(self.game_height*(.745-.15)/7)
         x2, y2 = x1 + dx, y1 + dy
         crop_img = cv2.cvtColor(self.current_screen_img[y1:y2, x1:x2], cv2.COLOR_BGR2GRAY)
-        _, thrsh = cv2.threshold(crop_img, 100, 255, cv2.THRESH_BINARY)
-        return int(np.mean(thrsh) > 0)
+        _, thresh = cv2.threshold(crop_img, 100, 255, cv2.THRESH_BINARY)
+        cv2.imwrite("crop.png", crop_img)
+        cv2.imwrite("thresh.png", thresh)
+        return int(np.mean(thresh) > 0)
 
     def update_game_state(self):
         """
@@ -179,9 +182,16 @@ class Game():
         using the captured screen image, analyze each ball location for if median is > 0
         returns matrix of ball values.
         """
-        for i in range(8):
-            for j in range(7):
-                self.state[i][j] = self.get_ball_value(i, j)
+        self.current_screen_img = self.get_screen_data()
+        if self.is_first_level:
+            for i in range(1):
+                for j in range(7):
+                    self.state[i][j] = self.get_ball_value(i, j)
+            self.is_first_level = False
+        else:
+            for i in range(8):
+                for j in range(7):
+                    self.state[i][j] = self.get_ball_value(i, j)
 
     def move_game_area(direction):
         pass
