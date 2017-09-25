@@ -4,6 +4,7 @@ import neat
 import game_wrapper
 import os
 import time
+import numpy as np
 
 game = game_wrapper.Game(use_existing_game=True)
 
@@ -18,9 +19,9 @@ def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
         net = neat.nn.FeedForwardNetwork.create(genome, config)
         state, circle_location = game.update_game_state()
-
-        action = net.activate([state, circle_location])
-        game.release_circle(action)
+        state_ = state.reshape(-1, 1)
+        action = net.activate(np.append(state_, circle_location))
+        game.release_circle(action[0])
         new_state = game.update_game_state()
         genome.fitness = get_fitness_score(state, new_state)
 
