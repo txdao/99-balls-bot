@@ -36,19 +36,26 @@ def eval_genomes(genomes, config):
         net = neat.nn.FeedForwardNetwork.create(genome, config)
         score = 1
         f_ball_history = []
-
+        level = 0
         while score > 0:
             state, circle_location = game.update_game_state()
             state_ = state.reshape(-1, 1)
             action = net.activate(np.append(state_, circle_location))
-            game.release_circle((action[0]-.5)*90)
+            game.release_circle((action[0]-.5)*game.MAX_RELEASE_ANGLE_DEG)
             game.current_level_img = game.get_current_level_img()
+            time_elapsed = 0
             while not game.is_new_level:
-                time.sleep(.1) #wait until next level
+                sleep_time = .1
+                time.sleep(sleep_time) #wait until next level
                 game.is_new_level = game.check_if_new_level()
+                time_elapsed += sleep_time
+                if time_elapsed > 10:
+                    game.release_circle((action[0]-.5)*game.MAX_RELEASE_ANGLE_DEG)
+                    time_elapsed = 0
             new_state, _ = game.update_game_state()
-            level = 1
+            level += 1
             score, f_ball_removed, _, _ = get_fitness_score(state, new_state, level)
+            print(score)
             f_ball_history.append(f_ball_removed)
 
         genome.fitness = np.mean(f_ball_history) + level/100

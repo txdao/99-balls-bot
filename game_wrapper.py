@@ -132,7 +132,7 @@ class Game():
         mouse.left_click(self, self.PAUSE_BUTTON_PCT)
         mouse.left_click(self, self.RESET_BUTTON_PCT)
         self.is_first_level = True
-        time.sleep(1)
+        time.sleep(1.25)
 
     def return_home(self):
         mouse.left_click(self, self.PAUSE_BUTTON_PCT)
@@ -166,9 +166,9 @@ class Game():
         Assume that the image was captured already
         """
         x1 = int(self.game_coords[0][0] + self.game_width*j/7)
-        y1 = int(self.game_coords[0][1] + self.game_height*i*(.745-.15)/7 + self.game_height*.15)
+        y1 = int(self.game_coords[0][1] + self.game_height*i*(.75-.15)/7 + self.game_height*.15)
         dx = int(self.game_width/7)
-        dy = int(self.game_height*(.745-.15)/7)
+        dy = int(self.game_height*(.75-.15-.01)/7)
         x2, y2 = x1 + dx, y1 + dy
         crop_img = cv2.cvtColor(self.current_screen_img[y1:y2, x1:x2], cv2.COLOR_BGR2GRAY)
         _, thresh = cv2.threshold(crop_img, 100, 255, cv2.THRESH_BINARY)

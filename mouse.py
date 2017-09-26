@@ -31,7 +31,7 @@ def left_click(game_obj=None, location=None):
 def left_down(game_obj=None, location=None):
 #    if game_obj ==  None:
     win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,0,0)
-    time.sleep(.1)
+    time.sleep(.05)
 #    else:
 #        x = int(game_obj.game_width*location[0] + game_obj.game_coords[0][0])
 #        y = int(game_obj.game_height*location[1] + game_obj.game_coords[0][1])
@@ -39,7 +39,7 @@ def left_down(game_obj=None, location=None):
 
 def left_up():
     win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,0,0)
-    time.sleep(.1)
+    time.sleep(.05)
 
 #def move_to(game_obj, location):
 #    x = int(game_obj.game_width*location[0] + game_obj.game_coords[0][0])
