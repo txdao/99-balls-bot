@@ -62,6 +62,8 @@ class Game():
         self.level_number = []
         self.ball_locations = []
         self.is_first_level = True
+        self.is_new_level = True
+        self.current_level_img = self.get_current_level_img()
 
     def launch_game_browser(self, url):
         """
@@ -151,6 +153,7 @@ class Game():
         mouse.left_down()
         pyautogui.moveTo(x=x_orig, y=y_orig)
         mouse.left_up()
+        self.is_new_level = False
 
     def get_screen_data(self):
         ImageGrab.grab_to_file('screen_grab.png', childprocess = False)
@@ -203,6 +206,22 @@ class Game():
 
         self.get_circle_location()
         return self.state.copy(), self.circle_location.copy()
+
+    def get_current_level_img(self):
+        x1 = int(self.game_coords[0][0] + self.game_width*.45)
+        y1 = int(self.game_coords[0][1] + self.game_height*.015)
+        x2 = int(self.game_coords[0][0] + self.game_width*.55)
+        y2 = int(self.game_coords[0][1] + self.game_height*.065)
+        print(x1)
+        print(y1)
+        print(x2)
+        print(y2)
+        crop_img = cv2.cvtColor(self.current_screen_img[y1:y2, x1:x2], cv2.COLOR_BGR2GRAY)
+        cv2.imwrite('crop.png', crop_img)
+        return crop_img
+
+    def check_for_new_level(self):
+        pass
 
     def update_circle_location(self):
 

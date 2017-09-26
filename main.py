@@ -18,6 +18,7 @@ def get_fitness_score(state, new_state, level):
     removed = np.sum(diff)
     n_balls = np.sum(state)
     f_ball_removed = removed/n_balls
+
     for i in range(7, 0, -1):
         if sum(new_state[i]) > 0:
             lowest_ball = i
@@ -30,13 +31,13 @@ def get_fitness_score(state, new_state, level):
 
 def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
+
         net = neat.nn.FeedForwardNetwork.create(genome, config)
         state, circle_location = game.update_game_state()
         state_ = state.reshape(-1, 1)
         action = net.activate(np.append(state_, circle_location))
-        #wait until next level
         game.release_circle((action[0]-.5)*90)
-        time.sleep(3)
+        time.sleep(3) #wait until next level
         new_state, _ = game.update_game_state()
         level = 1
         genome.fitness = get_fitness_score(state, new_state, level)
