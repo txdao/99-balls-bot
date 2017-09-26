@@ -37,7 +37,10 @@ def eval_genomes(genomes, config):
         state_ = state.reshape(-1, 1)
         action = net.activate(np.append(state_, circle_location))
         game.release_circle((action[0]-.5)*90)
-        time.sleep(3) #wait until next level
+        game.current_level_img = game.get_current_level_img()
+        while not game.is_new_level:
+            time.sleep(.1) #wait until next level
+            game.is_new_level = game.check_if_new_level()
         new_state, _ = game.update_game_state()
         level = 1
         genome.fitness = get_fitness_score(state, new_state, level)
@@ -69,14 +72,17 @@ def train_neural_net(games):
     return None
 
 def run():
-    game.start_game()
-    time.sleep(1)
+    try:
+        game.start_game()
+        time.sleep(1)
 
-    # train neural net
-    winner = train_neural_net(game)
+        # train neural net
+        winner = train_neural_net(game)
 
-    # save winning data etc (on interupt?).
-    return game
+        # save winning data etc (on interupt?).
+        return game
+    except KeyboardInterrupt:
+        pass
 
 if __name__ == '__main__':
     run()
