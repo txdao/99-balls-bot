@@ -195,6 +195,7 @@ class Game():
         """
         self.current_screen_img = self.get_screen_data()
         if self.is_first_level:
+            self.state = np.zeros((8,7))
             for i in range(1):
                 for j in range(7):
                     self.state[i][j] = self.get_ball_value(i, j)

@@ -27,7 +27,7 @@ def get_fitness_score(state, new_state, level):
 
     f_lowest_ball = (lowest_ball+1)/8
     f_level = level/TARGET_LEVEL
-    score = f_ball_removed + f_level - 2*f_lowest_ball
+    score = f_ball_removed + f_level - 2*(f_lowest_ball)**2
     return score, f_ball_removed, f_lowest_ball, f_level
 
 def eval_genomes(genomes, config):
@@ -55,7 +55,7 @@ def eval_genomes(genomes, config):
             new_state, _ = game.update_game_state()
             level += 1
             score, f_ball_removed, _, _ = get_fitness_score(state, new_state, level)
-            print(score)
+#            print(score)
             f_ball_history.append(f_ball_removed)
 
         genome.fitness = np.mean(f_ball_history) + level/100
