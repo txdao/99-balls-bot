@@ -144,7 +144,7 @@ class Game():
         d = self.game_width*.45
         dx = d*math.sin(math.radians(angle))
         dy = d*math.cos(math.radians(angle))
-        origin_pct = [0.5, 0.885]
+        origin_pct = [0.5, 0.92]
         x_orig = int(self.game_width*origin_pct[0] + self.game_coords[0][0])
         y_orig = int(self.game_height*origin_pct[1] + self.game_coords[0][1])
         pyautogui.moveTo(x=x_orig+dx, y=y_orig-dy)

@@ -3,3 +3,4 @@ screen.png
 crop.png
 thresh.png
 __pycache__/
+neat-checkpoint-*

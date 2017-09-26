@@ -26,7 +26,7 @@ def eval_genomes(genomes, config):
         state_ = state.reshape(-1, 1)
         action = net.activate(np.append(state_, circle_location))
         #wait until next level
-        game.release_circle(action[0])
+        game.release_circle((action[0]-.5)*90)
         time.sleep(3)
         new_state, _ = game.update_game_state()
         genome.fitness = get_fitness_score(state, new_state)
