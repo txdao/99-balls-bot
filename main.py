@@ -19,6 +19,7 @@ def get_fitness_score(state, new_state, level):
     n_balls = np.sum(state)
     f_ball_removed = removed/n_balls
 
+    lowest_ball = 0
     for i in range(7, 0, -1):
         if sum(new_state[i]) > 0:
             lowest_ball = i
@@ -33,17 +34,25 @@ def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
 
         net = neat.nn.FeedForwardNetwork.create(genome, config)
-        state, circle_location = game.update_game_state()
-        state_ = state.reshape(-1, 1)
-        action = net.activate(np.append(state_, circle_location))
-        game.release_circle((action[0]-.5)*90)
-        game.current_level_img = game.get_current_level_img()
-        while not game.is_new_level:
-            time.sleep(.1) #wait until next level
-            game.is_new_level = game.check_if_new_level()
-        new_state, _ = game.update_game_state()
-        level = 1
-        genome.fitness = get_fitness_score(state, new_state, level)
+        score = 1
+        f_ball_history = []
+
+        while score > 0:
+            state, circle_location = game.update_game_state()
+            state_ = state.reshape(-1, 1)
+            action = net.activate(np.append(state_, circle_location))
+            game.release_circle((action[0]-.5)*90)
+            game.current_level_img = game.get_current_level_img()
+            while not game.is_new_level:
+                time.sleep(.1) #wait until next level
+                game.is_new_level = game.check_if_new_level()
+            new_state, _ = game.update_game_state()
+            level = 1
+            score, f_ball_removed, _, _ = get_fitness_score(state, new_state, level)
+            f_ball_history.append(f_ball_removed)
+
+        genome.fitness = np.mean(f_ball_history) + level/100
+        game.reset_game()
 
 def train_neural_net(games):
     """

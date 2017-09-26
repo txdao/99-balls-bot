@@ -132,7 +132,7 @@ class Game():
         mouse.left_click(self, self.PAUSE_BUTTON_PCT)
         mouse.left_click(self, self.RESET_BUTTON_PCT)
         self.is_first_level = True
-        time.sleep(.5)
+        time.sleep(1)
 
     def return_home(self):
         mouse.left_click(self, self.PAUSE_BUTTON_PCT)
