@@ -6,9 +6,10 @@ import os
 import time
 import numpy as np
 
+TARGET_LEVEL = 100
 game = game_wrapper.Game(use_existing_game=True)
 
-def get_fitness_score(state, new_state):
+def get_fitness_score(state, new_state, level):
     """
     given some information from the previous play,
     compute a score for the gene.
@@ -16,8 +17,16 @@ def get_fitness_score(state, new_state):
     diff = state[:-1] - new_state[1:]
     removed = np.sum(diff)
     n_balls = np.sum(state)
+    f_ball_removed = removed/n_balls
+    for i in range(7, 0, -1):
+        if sum(new_state[i]) > 0:
+            lowest_ball = i
+            break
 
-    return removed/n_balls
+    f_lowest_ball = (lowest_ball+1)/8
+    f_level = level/TARGET_LEVEL
+    score = f_ball_removed + f_level - 2*f_lowest_ball
+    return score, f_ball_removed, f_lowest_ball, f_level
 
 def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
@@ -29,7 +38,8 @@ def eval_genomes(genomes, config):
         game.release_circle((action[0]-.5)*90)
         time.sleep(3)
         new_state, _ = game.update_game_state()
-        genome.fitness = get_fitness_score(state, new_state)
+        level = 1
+        genome.fitness = get_fitness_score(state, new_state, level)
 
 def train_neural_net(games):
     """
