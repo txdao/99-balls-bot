@@ -5,8 +5,10 @@ import game_wrapper
 import os
 import time
 import numpy as np
+import sys
 
-TARGET_LEVEL = 100
+print(sys.argv[0])
+TARGET_LEVEL = 10
 game = game_wrapper.Game(use_existing_game=True)
 
 def get_fitness_score(state, new_state, level):
@@ -27,7 +29,8 @@ def get_fitness_score(state, new_state, level):
 
     f_lowest_ball = (lowest_ball+1)/8
     f_level = level/TARGET_LEVEL
-    score = f_ball_removed + f_level - 2*(f_lowest_ball)**2
+    f_level = min(f_level, 1)
+    score = f_ball_removed + f_level - 2*(f_lowest_ball)**4
     return score, f_ball_removed, f_lowest_ball, f_level
 
 def eval_genomes(genomes, config):
@@ -58,7 +61,7 @@ def eval_genomes(genomes, config):
 #            print(score)
             f_ball_history.append(f_ball_removed)
 
-        genome.fitness = np.mean(f_ball_history) + level/100
+        genome.fitness = np.mean(f_ball_history) + level/TARGET_LEVEL
         game.reset_game()
 
 def train_neural_net(games):
@@ -74,7 +77,11 @@ def train_neural_net(games):
                          config_file)
 
     # Create the population, which is the top-level object for a NEAT run.
-    p = neat.Population(config)
+    num = 39
+    if num > 0:
+        p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-' + str(num))
+    else:
+        p = neat.Population(config)
 
     # Add a stdout reporter to show progress in the terminal.
     p.add_reporter(neat.StdOutReporter(True))
