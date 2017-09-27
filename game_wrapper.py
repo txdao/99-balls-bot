@@ -24,6 +24,7 @@ class Game():
     LEVEL_NUMBER_Y_PCT = 0
     STD_BLACK = [0, 0, 0]
     START_BUTTON_PCT = [0.50,0.60]
+    GAME_OVER_PLAY_PCT = [0.5, 0.83]
     RESET_BUTTON_PCT = [0.28, 0.5]
     PAUSE_BUTTON_PCT = [0.94, 0.035]
     HOME_BUTTON_PCT = [0.71, 0.50]
@@ -64,6 +65,7 @@ class Game():
         self.is_first_level = True
         self.is_new_level = True
         self.current_level_img = self.get_current_level_img()
+        self.is_game_over = False
 
     def launch_game_browser(self, url):
         """
@@ -127,6 +129,7 @@ class Game():
         Presses start button on home screen
         """
         mouse.left_click(self, self.START_BUTTON_PCT)
+        time.sleep(1)
 
     def reset_game(self):
         mouse.left_click(self, self.PAUSE_BUTTON_PCT)
@@ -141,6 +144,7 @@ class Game():
 
     def game_over_click_home(self):
         mouse.left_click(self, self.GAME_OVER_PLAY_PCT)
+        time.sleep(.5)
 
     def release_circle(self, angle):
         d = self.game_width*.45
@@ -215,6 +219,9 @@ class Game():
         x2 = int(self.game_coords[0][0] + self.game_width*.55)
         y2 = int(self.game_coords[0][1] + self.game_height*.065)
         return  cv2.cvtColor(current_screen_img[y1:y2, x1:x2], cv2.COLOR_BGR2GRAY)
+
+    def check_if_game_over(self):
+        return np.max(self.get_current_level_img()) < 250
 
     def check_if_new_level(self):
         return not np.array_equal(self.current_level_img, self.get_current_level_img())

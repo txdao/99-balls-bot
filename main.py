@@ -8,7 +8,7 @@ import numpy as np
 import sys
 
 print(sys.argv[0])
-TARGET_LEVEL = 10
+TARGET_LEVEL = 50
 game = game_wrapper.Game(use_existing_game=True)
 
 def get_fitness_score(state, new_state, level):
@@ -44,7 +44,7 @@ def eval_genomes(genomes, config):
             state, circle_location = game.update_game_state()
             state_ = state.reshape(-1, 1)
             action = net.activate(np.append(state_, circle_location))
-            game.release_circle((action[0]-.5)*game.MAX_RELEASE_ANGLE_DEG)
+            game.release_circle((action[0]-.5)*2*game.MAX_RELEASE_ANGLE_DEG)
             game.current_level_img = game.get_current_level_img()
             time_elapsed = 0
             while not game.is_new_level:
@@ -55,6 +55,11 @@ def eval_genomes(genomes, config):
                 if time_elapsed > 10:
                     game.release_circle((action[0]-.5)*game.MAX_RELEASE_ANGLE_DEG)
                     time_elapsed = 0
+            if game.check_if_game_over():
+                f_ball_history.append(0)
+                game.game_over_click_home()
+                game.start_game()
+                break
             new_state, _ = game.update_game_state()
             level += 1
             score, f_ball_removed, _, _ = get_fitness_score(state, new_state, level)
@@ -77,7 +82,7 @@ def train_neural_net(games):
                          config_file)
 
     # Create the population, which is the top-level object for a NEAT run.
-    num = 39
+    num = 0
     if num > 0:
         p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-' + str(num))
     else:
@@ -97,7 +102,6 @@ def train_neural_net(games):
 def run():
     try:
         game.start_game()
-        time.sleep(1)
 
         # train neural net
         winner = train_neural_net(game)
