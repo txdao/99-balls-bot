@@ -82,7 +82,7 @@ def train_neural_net(games):
                          config_file)
 
     # Create the population, which is the top-level object for a NEAT run.
-    num = 0
+    num = 140
     if num > 0:
         p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-' + str(num))
     else:
