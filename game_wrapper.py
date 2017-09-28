@@ -29,7 +29,7 @@ class Game():
     PAUSE_BUTTON_PCT = [0.94, 0.035]
     HOME_BUTTON_PCT = [0.71, 0.50]
     RESUME_BUTTON_PCT = [0.50, 0.50]
-    MAX_RELEASE_ANGLE_DEG = 84.32
+    MAX_RELEASE_ANGLE_DEG = 84
     GAME_OVER_PLAY_PCT = [0.5, 0.8]
 
     def __init__(self, use_existing_game = False):

@@ -35,16 +35,20 @@ def get_fitness_score(state, new_state, level):
 
 def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
-
         net = neat.nn.FeedForwardNetwork.create(genome, config)
         score = 1
         f_ball_history = []
         level = 0
+        reset = True
         while score > 0:
             state, circle_location = game.update_game_state()
             state_ = state.reshape(-1, 1)
             action = net.activate(np.append(state_, circle_location))
-            game.release_circle((action[0]-1)*9)
+            if level == 0 and (action[0] == 0 or action[0] > 2):
+                f_ball_history.append(0)
+                reset = False
+                break
+            game.release_circle((action[0]-1)*game.MAX_RELEASE_ANGLE_DEG)
             game.current_level_img = game.get_current_level_img()
             time_elapsed = 0
             while not game.is_new_level:
@@ -53,7 +57,7 @@ def eval_genomes(genomes, config):
                 game.is_new_level = game.check_if_new_level()
                 time_elapsed += sleep_time
                 if time_elapsed > 10:
-                    game.release_circle((action[0]-1)*9)
+                    game.release_circle((action[0]-1)*game.MAX_RELEASE_ANGLE_DEG)
                     time_elapsed = 0
             if game.check_if_game_over():
                 f_ball_history.append(0)
@@ -67,7 +71,9 @@ def eval_genomes(genomes, config):
             f_ball_history.append(f_ball_removed)
 
         genome.fitness = np.mean(f_ball_history) + level/TARGET_LEVEL
-        game.reset_game()
+        if reset:
+            game.reset_game()
+
 
 def train_neural_net(games):
     """
@@ -82,7 +88,7 @@ def train_neural_net(games):
                          config_file)
 
     # Create the population, which is the top-level object for a NEAT run.
-    num = 140
+    num = 16
     if num > 0:
         p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-' + str(num))
     else:
