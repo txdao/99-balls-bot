@@ -147,6 +147,10 @@ class Game():
         time.sleep(.5)
 
     def release_circle(self, angle):
+        if angle > self.MAX_RELEASE_ANGLE_DEG:
+            angle = self.MAX_RELEASE_ANGLE_DEG
+        if abs(angle) > self.MAX_RELEASE_ANGLE_DEG:
+            angle = -self.MAX_RELEASE_ANGLE_DEG
         d = self.game_width*.45
         dx = d*math.sin(math.radians(angle))
         dy = d*math.cos(math.radians(angle))

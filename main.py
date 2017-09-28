@@ -30,7 +30,7 @@ def get_fitness_score(state, new_state, level):
     f_lowest_ball = (lowest_ball+1)/8
     f_level = level/TARGET_LEVEL
     f_level = min(f_level, 1)
-    score = f_ball_removed + f_level - 2*(f_lowest_ball)**4
+    score = f_ball_removed + f_level - 2*(f_lowest_ball)**3
     return score, f_ball_removed, f_lowest_ball, f_level
 
 def eval_genomes(genomes, config):
@@ -44,7 +44,7 @@ def eval_genomes(genomes, config):
             state, circle_location = game.update_game_state()
             state_ = state.reshape(-1, 1)
             action = net.activate(np.append(state_, circle_location))
-            game.release_circle((action[0]-.5)*2*game.MAX_RELEASE_ANGLE_DEG)
+            game.release_circle((action[0]-1)*9)
             game.current_level_img = game.get_current_level_img()
             time_elapsed = 0
             while not game.is_new_level:
@@ -53,7 +53,7 @@ def eval_genomes(genomes, config):
                 game.is_new_level = game.check_if_new_level()
                 time_elapsed += sleep_time
                 if time_elapsed > 10:
-                    game.release_circle((action[0]-.5)*game.MAX_RELEASE_ANGLE_DEG)
+                    game.release_circle((action[0]-1)*9)
                     time_elapsed = 0
             if game.check_if_game_over():
                 f_ball_history.append(0)
