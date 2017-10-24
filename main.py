@@ -30,13 +30,15 @@ def get_fitness_score(state, new_state, level):
     f_lowest_ball = (lowest_ball+1)/8
     f_level = level/TARGET_LEVEL
     f_level = min(f_level, 1)
-    score = f_ball_removed + f_level - 2*(f_lowest_ball)**3
+    score = f_ball_removed + f_level - 2*(f_lowest_ball)**2
     return score, f_ball_removed, f_lowest_ball, f_level
 
 def eval_genomes(genomes, config):
     for genome_id, genome in genomes:
+#        print('.')
         net = neat.nn.FeedForwardNetwork.create(genome, config)
         score = 1
+        f_ball_removed = .01
         f_ball_history = []
         level = 0
         reset = True
@@ -44,9 +46,13 @@ def eval_genomes(genomes, config):
             state, circle_location = game.update_game_state()
             state_ = state.reshape(-1, 1)
             action = net.activate(np.append(state_, circle_location))
-            if level == 0 and (action[0] == 0 or action[0] > 2):
+#            print(action)
+            if action[0] == 0 or action[0] > 2:
+                print('angle exceeded')
                 f_ball_history.append(0)
-                reset = False
+                if level == 0:
+                    reset = False
+                game.is_first_level = True
                 break
             game.release_circle((action[0]-1)*game.MAX_RELEASE_ANGLE_DEG)
             game.current_level_img = game.get_current_level_img()
@@ -63,11 +69,12 @@ def eval_genomes(genomes, config):
                 f_ball_history.append(0)
                 game.game_over_click_home()
                 game.start_game()
+                reset = False
                 break
             new_state, _ = game.update_game_state()
             level += 1
             score, f_ball_removed, _, _ = get_fitness_score(state, new_state, level)
-#            print(score)
+            print(score)
             f_ball_history.append(f_ball_removed)
 
         genome.fitness = np.mean(f_ball_history) + level/TARGET_LEVEL
@@ -88,7 +95,7 @@ def train_neural_net(games):
                          config_file)
 
     # Create the population, which is the top-level object for a NEAT run.
-    num = 16
+    num = 0
     if num > 0:
         p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-' + str(num))
     else:

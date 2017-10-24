@@ -143,8 +143,10 @@ class Game():
         self.is_first_level = True
 
     def game_over_click_home(self):
+        time.sleep(1)
         mouse.left_click(self, self.GAME_OVER_PLAY_PCT)
-        time.sleep(.5)
+        time.sleep(1)
+        self.is_first_level = True
 
     def release_circle(self, angle):
         if angle > self.MAX_RELEASE_ANGLE_DEG:
