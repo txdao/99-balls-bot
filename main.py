@@ -46,7 +46,7 @@ def eval_genomes(genomes, config):
             state, circle_location = game.update_game_state()
             state_ = state.reshape(-1, 1)
             action = net.activate(np.append(state_, circle_location))
-#            print(action)
+            print(action)
             if action[0] == 0 or action[0] > 2:
                 print('angle exceeded')
                 f_ball_history.append(0)

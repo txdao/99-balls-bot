@@ -42,8 +42,8 @@ feed_forward            = False
 initial_connection      = fs_neat_nohidden
 
 # node add/remove rates
-node_add_prob           = 0.2
-node_delete_prob        = 0.2
+node_add_prob           = 0.5
+node_delete_prob        = 0.4
 
 # network parameters
 num_hidden              = 0
